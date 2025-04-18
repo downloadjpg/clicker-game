@@ -23,7 +23,7 @@ impl CommandProcessor {
             "help" => self.cmd_help(state),
             "hack" => self.cmd_hack(state),
             //"buy" if cmd_parts.len() > 1 => self.cmd_buy(cmd_parts[1], state),
-            //"status" => self.cmd_status(state),
+            "status" => self.cmd_status(state),
             //"clear" => self.cmd_clear(state),
             _ => state.command_output = format!("UNKNOWN COMMAND: '{}'", cmd),
         }
@@ -43,6 +43,11 @@ impl CommandProcessor {
         state.resources.credits += hack_value;
         state.command_output = format!("HACK SUCCESSFUL. +{} CREDITS", hack_value);
     }
-    
-    // Other command methods...
+
+    fn cmd_status(&self, state: &mut GameState) {
+        state.command_output = format!("CREDITS: {}\n\
+                               CREDITS PER SECOND: {}\n",
+                               state.resources.credits,
+                               state.resources.credits_per_second,);
+    }
 }

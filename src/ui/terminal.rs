@@ -47,7 +47,7 @@ impl TerminalPanel {
             .border_style(Style::default().fg(Color::Green));
         
         // Get input text from event handler
-        let input_text = Span::from(format!(" >_ {}", event_handler.current_input()))
+        let input_text = Span::from(format!(" >_ {} ", event_handler.current_input()))
             .style(Style::default().fg(Color::Green));
         let input = Paragraph::new(input_text);
         frame.render_widget(input_block, terminal_chunks[1]);

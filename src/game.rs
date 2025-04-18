@@ -21,7 +21,7 @@ pub fn run<B: ratatui::backend::Backend>(terminal: &mut Terminal<B>) -> Result<(
             ui_manager.render(frame, &game_state, &event_handler);
         })?;
 
-        // Handle input events // TODO unsure!
+        // Handle input events
         if let Some(event) = event_handler.next(Duration::from_millis(10))? {
 
             if event_handler.should_quit(&event) {
