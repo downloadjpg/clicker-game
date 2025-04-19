@@ -22,7 +22,7 @@ impl CommandProcessor {
         match cmd_parts[0] {
             "help" => self.cmd_help(state),
             "hack" => self.cmd_hack(state),
-            //"buy" if cmd_parts.len() > 1 => self.cmd_buy(cmd_parts[1], state),
+            "buy" if cmd_parts.len() > 1 => self.cmd_buy(cmd_parts[1], state),
             "status" => self.cmd_status(state),
             //"clear" => self.cmd_clear(state),
             _ => state.command_output = format!("UNKNOWN COMMAND: '{}'", cmd),
@@ -39,7 +39,7 @@ impl CommandProcessor {
     }
     
     fn cmd_hack(&self, state: &mut GameState) {
-        let hack_value = 1; // Base value
+        let hack_value : f64 = 1.0; // Base value
         state.resources.credits += hack_value;
         state.command_output = format!("HACK SUCCESSFUL. +{} CREDITS", hack_value);
     }
@@ -47,7 +47,20 @@ impl CommandProcessor {
     fn cmd_status(&self, state: &mut GameState) {
         state.command_output = format!("CREDITS: {}\n\
                                CREDITS PER SECOND: {}\n",
-                               state.resources.credits,
-                               state.resources.credits_per_second,);
+                               state.resources.credits as i64,
+                               state.resources.credits_per_second as i64);
+    }
+    
+    fn cmd_buy(&self, name: &str, state: &mut GameState) {
+        match name {
+            "port-scan" => {
+                state.resources.credits_per_second += 1.0;
+                state.command_output = format!("PURCHASED 1 PORT-SCAN UPGRADE. CREDITS PER SECOND: {}",
+                                               state.resources.credits_per_second);
+            }
+            _ => {
+                state.command_output = format!("UNKNOWN ITEM: '{}'", name);
+            }
+        }
     }
 }

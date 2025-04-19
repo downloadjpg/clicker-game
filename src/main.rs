@@ -6,7 +6,7 @@ use ratatui::{
     crossterm::terminal::{EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::{
-    io::{self, Write},
+    io,
     panic,
 };
 
