@@ -24,6 +24,7 @@ impl CommandProcessor {
             "hack" => self.cmd_hack(state),
             "buy" if cmd_parts.len() > 1 => self.cmd_buy(cmd_parts[1], state),
             "status" => self.cmd_status(state),
+            "echo" => self.cmd_echo(&cmd_parts[1..], state),
             //"clear" => self.cmd_clear(state),
             _ => state.command_output = format!("UNKNOWN COMMAND: '{}'", cmd),
         }
@@ -34,6 +35,7 @@ impl CommandProcessor {
                                hack - Earn credits\n\
                                buy <item> - Purchase upgrades\n\
                                status - Show current status\n\
+                               echo <message> - Echo a message\n\
                                clear - Clear terminal\n\
                                help - Show this help".to_string();
     }
@@ -61,6 +63,14 @@ impl CommandProcessor {
             _ => {
                 state.command_output = format!("UNKNOWN ITEM: '{}'", name);
             }
+        }
+    }
+
+    fn cmd_echo(&self, args: &[&str], state: &mut GameState) {
+        if args.is_empty() {
+            state.command_output = "USAGE: echo <message>".to_string();
+        } else {
+            state.command_output = args.join(" ");
         }
     }
 }

@@ -9,11 +9,11 @@ pub fn run<B: ratatui::backend::Backend>(terminal: &mut Terminal<B>) -> Result<(
     // Initialize game state
     let mut game_state = GameState::new();
     let mut ui_manager = UiManager::new();
-    let command_processor = CommandProcessor::new();
     let mut event_handler = EventHandler::new();
+    let command_processor = CommandProcessor::new();
 
     // Main game loop
-    let tick_rate = Duration::from_millis(100);
+    let tick_rate = Duration::from_millis(10);
     let mut last_tick = Instant::now();
     loop {
         // Update UI

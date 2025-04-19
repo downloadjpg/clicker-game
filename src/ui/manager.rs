@@ -6,6 +6,7 @@ use crate::state::GameState;
 use super::status::StatusPanel;
 use super::terminal::TerminalPanel;
 use crate::input::EventHandler;
+use std::time::Instant;
 
 pub struct UiManager {
     terminal_panel: TerminalPanel,
@@ -22,6 +23,7 @@ impl UiManager {
 
     pub fn update(&mut self, state: &GameState, event_handler: &EventHandler) {
         self.terminal_panel.update(state, event_handler);
+        self.status_panel.update(state);
     }
 
     pub fn draw(&self, frame: &mut Frame) {
@@ -31,6 +33,12 @@ impl UiManager {
 
 impl Widget for &UiManager {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        self.terminal_panel.render(area, buf);
+        let chunks = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints([Constraint::Percentage(70), Constraint::Percentage(30)].as_ref())
+            .split(area);
+
+        self.terminal_panel.render(chunks[0], buf);
+        self.status_panel.render(chunks[1], buf);
     }
 }
