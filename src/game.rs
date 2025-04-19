@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 pub fn run<B: ratatui::backend::Backend>(terminal: &mut Terminal<B>) -> Result<(), Box<dyn std::error::Error>> {
     // Initialize game state
     let mut game_state = GameState::new();
-    let ui_manager = UiManager::new();
+    let mut ui_manager = UiManager::new();
     let command_processor = CommandProcessor::new();
     let mut event_handler = EventHandler::new();
 
@@ -17,13 +17,11 @@ pub fn run<B: ratatui::backend::Backend>(terminal: &mut Terminal<B>) -> Result<(
     let mut last_tick = Instant::now();
     loop {
         // Update UI
-        terminal.draw(|frame| {
-            ui_manager.render(frame, &game_state, &event_handler);
-        })?;
-
+        ui_manager.update(&game_state, &event_handler);
+        // Draw UI
+        terminal.draw(|frame| ui_manager.draw(frame))?;
         // Handle input events
         if let Some(event) = event_handler.next(Duration::from_millis(10))? {
-
             if event_handler.should_quit(&event) {
                 break;
             }

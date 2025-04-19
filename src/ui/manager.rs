@@ -1,5 +1,7 @@
-use ratatui::Frame;
-
+use crossterm::terminal;
+use ratatui::{
+    layout::{Constraint, Direction, Layout, Rect,}, prelude::*, style::{Color, Style}, symbols::half_block, text::{Span, Text}, widgets::{Block, Borders, Paragraph, Widget}, Frame
+};
 use crate::state::GameState;
 use super::status::StatusPanel;
 use super::terminal::TerminalPanel;
@@ -18,8 +20,17 @@ impl UiManager {
         }
     }
 
-    pub fn render(&self, frame: &mut Frame, state: &GameState, event_handler: &EventHandler) {
-        self.terminal_panel.render(frame, frame.area(), state, &event_handler);
-        //self.status_panel.render(frame, frame.area(), state);
+    pub fn update(&mut self, state: &GameState, event_handler: &EventHandler) {
+        self.terminal_panel.update(state, event_handler);
+    }
+
+    pub fn draw(&self, frame: &mut Frame) {
+        frame.render_widget(self, frame.area());
+    }
+}
+
+impl Widget for &UiManager {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        self.terminal_panel.render(area, buf);
     }
 }
