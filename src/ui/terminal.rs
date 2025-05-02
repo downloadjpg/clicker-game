@@ -11,8 +11,9 @@ use crate::input::EventHandler;
 use crate::state::GameState;
 //use crate::input::EventHandler;
 
+const CURSOR_BLINK_RATE: f32 = 2.0; // Cursor blink rate in Hz
+
 pub struct TerminalPanel {
-    cursor_blink_rate: f32, // blinks per second
     cursor_visible: bool,   // whether or not the cursor is visible
     last_cursor_toggle: Instant, // tracks the last time the cursor toggled
     command_output: String,
@@ -22,7 +23,6 @@ pub struct TerminalPanel {
 impl TerminalPanel {
     pub fn new() -> Self {
         Self {
-            cursor_blink_rate: 2.0, // 1 blink per second
             cursor_visible: false,
             last_cursor_toggle: Instant::now(),
             command_output: String::new(),
@@ -33,7 +33,7 @@ impl TerminalPanel {
     pub fn update(&mut self, game_state: &GameState, event_handler: &EventHandler) {
         // Check if it's time to toggle the cursor visibility
         let elapsed = self.last_cursor_toggle.elapsed().as_secs_f32();
-        if elapsed >= 1.0 / self.cursor_blink_rate {
+        if elapsed >= 1.0 / CURSOR_BLINK_RATE {
             self.cursor_visible = !self.cursor_visible;
             self.last_cursor_toggle = Instant::now(); // Reset the toggle timer
         }

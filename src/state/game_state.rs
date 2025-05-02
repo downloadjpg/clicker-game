@@ -6,6 +6,7 @@ pub struct GameState {
     //pub upgrades: Vec<String>,
     // pub has_status_panel: bool,
     // pub has_upgrades_panel: bool,
+    pub network: Network,
     pub command_history: Vec<String>,
     pub command_output: String
 }
@@ -17,6 +18,7 @@ impl GameState {
             // has_status_panel: false,
             // has_upgrades_panel: false,
             command_history: Vec::new(),
+            network: Network::new(),
             command_output: "SYSTEM INITIALIZED. TYPE 'help' FOR COMMANDS.".to_string(),
         }
     }
@@ -44,18 +46,56 @@ impl Resources {
     }
 }
 
-// pub struct Store {
-//     pub items: Vec<Item>,
-// }
 
-// impl Store {
-//     pub fn new() -> Self {
-//         Self {
-//             items: vec![
-//                 Item::new("port-scan", 10.0, "Scan for open ports"),
-//                 Item::new("firewall-breach", 50.0, "Breach the firewall"),
-//                 Item::new("data-exfiltration", 100.0, "Exfiltrate data"),
-//             ],
-//         }
-//     }
-// }
+
+
+
+
+// The player can connect to different shells on their network
+// Each shell has a different address and can be hacked for different amounts of credits
+use std::collections::HashMap;
+
+// How should we represent the shells? IP address isn't an actual address, just a string. We don't need to do any networking. It's all a game!
+pub struct Shell {
+    pub address: String,
+    pub credit_reward: f64,
+    pub is_hacked: bool,
+    pub cps: f64,
+}
+
+impl Shell {
+    pub fn new(address: &str, credit_reward: f64) -> Self {
+        Self {
+            address: address.to_string(),
+            credit_reward,
+            is_hacked: false,
+            cps: 0.0,
+        }
+    }
+
+    pub fn hack(&mut self, credits: &mut f64) {
+        if !self.is_hacked {
+            self.is_hacked = true;
+            // Add the credit reward to the player's resources
+            // self.resources.credits += self.credit_reward;
+            *credits += self.credit_reward;
+        }
+    }
+
+}
+
+// The gamestate network is a collection of shells and their addresses
+pub struct Network {
+    pub shells: HashMap<String, Shell>,
+}
+
+
+impl Network {
+    pub fn new() -> Self {
+        let mut shells = HashMap::new();
+        shells.insert("derelict1".to_string(), Shell { address: "derelict1".to_string(), credit_reward: 10.0 });
+        shells.insert("derelict2".to_string(), Shell { address: "derelict2".to_string(), credit_reward: 20.0 });
+        shells.insert("derelict3".to_string(), Shell { address: "derelict3".to_string(), credit_reward: 30.0 });
+    }
+}
+
