@@ -2,7 +2,7 @@ use std::time::Duration;
 
 pub struct GameState {
     pub resources: Resources,
-    pub store: Store,
+    //pub store: Store,
     //pub upgrades: Vec<String>,
     // pub has_status_panel: bool,
     // pub has_upgrades_panel: bool,
@@ -44,17 +44,18 @@ impl Resources {
     }
 }
 
-pub struct Store {
-    pub items: Vec<Item>,
-}
-impl Store {
-    pub fn new() -> Self {
-        Self {
-            items: vec![
-                Item::new("port-scan", 10.0, "Scan for open ports"),
-                Item::new("firewall-breach", 50.0, "Breach the firewall"),
-                Item::new("data-exfiltration", 100.0, "Exfiltrate data"),
-            ],
-        }
-    }
-}
+// pub struct Store {
+//     pub items: Vec<Item>,
+// }
+
+// impl Store {
+//     pub fn new() -> Self {
+//         Self {
+//             items: vec![
+//                 Item::new("port-scan", 10.0, "Scan for open ports"),
+//                 Item::new("firewall-breach", 50.0, "Breach the firewall"),
+//                 Item::new("data-exfiltration", 100.0, "Exfiltrate data"),
+//             ],
+//         }
+//     }
+// }
