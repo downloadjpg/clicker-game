@@ -1,12 +1,15 @@
-use crossterm::terminal;
 use ratatui::{
-    layout::{Constraint, Direction, Layout, Rect,}, prelude::*, style::{Color, Style}, symbols::half_block, text::{Span, Text}, widgets::{Block, Borders, Paragraph, Widget}, Frame
+    prelude::*,
+    Terminal,
+    layout::{Constraint, Direction, Layout, Rect,},
 };
-use crate::state::GameState;
-use super::status::StatusPanel;
-use super::terminal::TerminalPanel;
-use crate::input::EventHandler;
-use std::time::Instant;
+
+mod terminal;
+mod status;
+
+use terminal::TerminalPanel;
+use status::StatusPanel;
+use super::state::GameState;
 
 pub struct UiManager {
     terminal_panel: TerminalPanel,
@@ -21,14 +24,15 @@ impl UiManager {
         }
     }
 
-    pub fn update(&mut self, state: &GameState, event_handler: &EventHandler) {
-        self.terminal_panel.update(state, event_handler);
+    pub fn draw<B: Backend>(&mut self, state: &GameState, terminal: &mut Terminal<B>) {
+        // Update state of panels
+        self.terminal_panel.update(state);
         self.status_panel.update(state);
-    }
 
-    pub fn draw(&self, frame: &mut Frame) {
-        frame.render_widget(self, frame.area());
+        // Draw everything
+        let _ = terminal.draw(|frame| self.render(frame.area(), frame.buffer_mut()));
     }
+    
 }
 
 impl Widget for &UiManager {

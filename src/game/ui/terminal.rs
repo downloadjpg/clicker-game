@@ -1,5 +1,4 @@
 use std::time::Instant;
-use crossterm::event;
 use ratatui::{
     prelude::*,
     layout::{Constraint, Direction, Layout, Rect},
@@ -7,13 +6,12 @@ use ratatui::{
     text::{Span, Text},
     widgets::{Block, Borders, Paragraph},
 };
-use crate::input::EventHandler;
-use crate::state::GameState;
-//use crate::input::EventHandler;
+use crate::game::GameState;
 
 const CURSOR_BLINK_RATE: f32 = 2.0; // Cursor blink rate in Hz
 
 pub struct TerminalPanel {
+    // cursor_pos: usize, // position of the cursor in the input line
     cursor_visible: bool,   // whether or not the cursor is visible
     last_cursor_toggle: Instant, // tracks the last time the cursor toggled
     command_output: String,
@@ -24,13 +22,14 @@ impl TerminalPanel {
     pub fn new() -> Self {
         Self {
             cursor_visible: false,
+            // cursor_pos: 0,
             last_cursor_toggle: Instant::now(),
             command_output: String::new(),
             current_input: String::new(),
         }
     }
 
-    pub fn update(&mut self, game_state: &GameState, event_handler: &EventHandler) {
+    pub fn update(&mut self, game_state: &GameState) {
         // Check if it's time to toggle the cursor visibility
         let elapsed = self.last_cursor_toggle.elapsed().as_secs_f32();
         if elapsed >= 1.0 / CURSOR_BLINK_RATE {
@@ -39,8 +38,8 @@ impl TerminalPanel {
         }
     
         // Update command output and current input
-        self.command_output = game_state.command_output.clone();
-        self.current_input = event_handler.current_input().to_string();
+        self.command_output = game_state.terminal.command_output.clone();
+        self.current_input = game_state.terminal.current_input.clone();
     }
 }
 
@@ -74,7 +73,8 @@ impl Widget for &TerminalPanel {
         let input_block = Block::default()
             .borders(Borders::TOP)
             .border_style(Style::default().fg(Color::Green));
-
+        
+        // Create the input text with cursor.
         let input_text = if self.cursor_visible {
             Span::from(format!(" >{}_ ", self.current_input))
         } else {

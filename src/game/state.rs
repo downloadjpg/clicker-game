@@ -1,25 +1,21 @@
 use std::time::Duration;
+use super::game_terminal::GameTerminal;
+use super::commands;
+
 
 pub struct GameState {
     pub resources: Resources,
-    //pub store: Store,
-    //pub upgrades: Vec<String>,
-    // pub has_status_panel: bool,
-    // pub has_upgrades_panel: bool,
+    pub terminal: GameTerminal,
     pub network: Network,
-    pub command_history: Vec<String>,
-    pub command_output: String
+
 }
 
 impl GameState {
     pub fn new() -> Self {
         Self {
             resources: Resources::new(),
-            // has_status_panel: false,
-            // has_upgrades_panel: false,
-            command_history: Vec::new(),
+            terminal: GameTerminal::new(),
             network: Network::new(),
-            command_output: "SYSTEM INITIALIZED. TYPE 'help' FOR COMMANDS.".to_string(),
         }
     }
     
@@ -27,6 +23,10 @@ impl GameState {
         // Update resources based on automations
         let seconds = elapsed.as_secs_f64();
         self.resources.credits += self.resources.credits_per_second as f64 * seconds; 
+    }
+
+    pub fn process_command(&mut self, command: String) {
+        commands::process(&command, self);
     }
 }
 
@@ -45,7 +45,6 @@ impl Resources {
         }
     }
 }
-
 
 
 
@@ -93,9 +92,13 @@ pub struct Network {
 impl Network {
     pub fn new() -> Self {
         let mut shells = HashMap::new();
-        shells.insert("derelict1".to_string(), Shell { address: "derelict1".to_string(), credit_reward: 10.0 });
-        shells.insert("derelict2".to_string(), Shell { address: "derelict2".to_string(), credit_reward: 20.0 });
-        shells.insert("derelict3".to_string(), Shell { address: "derelict3".to_string(), credit_reward: 30.0 });
+        shells.insert("derelict1".to_string(), Shell::new("derelict1", 1.0));
+        shells.insert("derelict2".to_string(), Shell::new("derelict2", 2.0));
+        shells.insert("derelict2".to_string(), Shell::new("derelict3", 3.0));
+
+        Self {
+            shells
+        }
     }
 }
 

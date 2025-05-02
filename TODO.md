@@ -1,7 +1,7 @@
 IN PROGRESS
 
 - [ ] mvp items list
-    - [ ] crypto miner - gives you 0.1 credits per second
+    - [ ] crypto miner - gives you 0.05 credits per second
     - [ ] hack-multiplier - increases hacking power by +0.5x
     - [ ] gpu - increases efficiency of miners by +0.2x
     - [ ] retirement fund - victory!
@@ -30,3 +30,8 @@ DONE
 - [x] status panel
 - [x] make blinking cursor 
 - [x] clean up init code (read ratatui docs)
+
+
+Event handling options:
+- each module handles events on their own
+- events passed to module

@@ -11,9 +11,6 @@ use std::{
 };
 
 mod game;
-mod state;
-mod ui;
-mod input;
 
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

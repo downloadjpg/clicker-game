@@ -6,7 +6,8 @@ use ratatui::{
     style::{Color, Style},
     text::Text,
 };
-use crate::state::GameState;
+
+use crate::game::GameState;
 
 pub struct StatusPanel {
     // Status-specific state
