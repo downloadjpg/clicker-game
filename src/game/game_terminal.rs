@@ -20,28 +20,28 @@ impl GameTerminal {
     }
 
     pub fn process_input(&mut self, input: KeyEvent, event_bus: &mut EventBus) {
+        use crossterm::event::KeyCode::*;
+
         match input.code {
-            crossterm::event::KeyCode::Enter => {
+            Enter => {
                 // Process the command
                 self.command_history.insert(0, self.current_input.clone());
                 // Call command processor here
                 event_bus.push(Event::Command(self.current_input.clone()));
                 self.current_input.clear();
             }
-            crossterm::event::KeyCode::Backspace => {
+            Backspace => {
                 // Remove the last character from the current input
                 self.current_input.pop();
             }
-            
-            crossterm::event::KeyCode::Up => { // todo: get all commands, not just last.
+            Up => {
                 // Move to the previous command in history
                 if let Some(last_command) = self.command_history.first() {
                     self.current_input = last_command.clone();
                     self.history_index += 1;
                 }
             }
-      
-           crossterm::event::KeyCode::Char(c) => {
+            Char(c) => {
                 // Add the character to the current input
                 self.current_input.push(c);
             }

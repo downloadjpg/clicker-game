@@ -28,6 +28,10 @@ impl GameState {
     pub fn process_command(&mut self, command: String) {
         commands::process(&command, self);
     }
+
+    pub fn set_output(&mut self, output: String) { // more of a helper than a setter. reduces path chasing.
+        self.terminal.command_output = output;
+    }
 }
 
 pub struct Resources {
@@ -85,20 +89,35 @@ impl Shell {
 
 // The gamestate network is a collection of shells and their addresses
 pub struct Network {
-    pub shells: HashMap<String, Shell>,
+    shells: HashMap<String, Shell>,
 }
 
 
 impl Network {
     pub fn new() -> Self {
-        let mut shells = HashMap::new();
-        shells.insert("derelict1".to_string(), Shell::new("derelict1", 1.0));
-        shells.insert("derelict2".to_string(), Shell::new("derelict2", 2.0));
-        shells.insert("derelict2".to_string(), Shell::new("derelict3", 3.0));
+        Self::from_shell_list(vec![
+            Shell::new("space-cadets.com", 10.0),
+            Shell::new("hackers.org", 20.0),
+            Shell::new("dark-web.net", 50.0),
+        ])
+    }
+
+    pub fn from_shell_list(list : Vec<Shell>) -> Self {
+        let shells = list.into_iter()
+            .map(|shell| (shell.address.clone(), shell))
+            .collect();
 
         Self {
             shells
         }
+    }
+
+    pub fn get_shells(&self) -> Vec<&Shell> {
+        self.shells.values().collect()
+    }
+
+    pub fn get_mut_shell(&mut self, address: &str) -> Option<&mut Shell> {
+        self.shells.get_mut(address)
     }
 }
 
