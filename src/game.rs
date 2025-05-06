@@ -4,7 +4,6 @@ use std::time::{Duration, Instant};
 mod ui;
 mod state;
 mod game_terminal;
-mod commands;
 
 use ui::UiManager;
 use state::GameState;
